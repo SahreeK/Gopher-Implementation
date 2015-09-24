@@ -21,6 +21,7 @@ class TCPServer:
 
         while True:
             clientSock, clientAddr = self.sock.accept()
+            # accepts connection, should not say anything
             print ("Connection received from ",  clientSock.getpeername())
             # Get the message and echo it back
             message = ""
@@ -29,14 +30,21 @@ class TCPServer:
                 if not len(data):
                     break
                 print ("Received message:  " + data.decode("ascii"))
-                poemType = data.decode("ascii")
-                if poemType == "H":
-                    message = "haiku"
-                elif poemType == "S":
-                    message = "sonnet"
+                clientMessage = data.decode("ascii")
+                # message to be sent out
                 data = message.encode("ascii")
                 clientSock.sendall(data)
             clientSock.close()
+            
+    def parseLinks(self, linksFile):
+        pass
+    
+    def parseFile(self, textFile):
+        pass
+    
+    def findFile(self, selectorString):
+        pass
+    
 
 def main():
     # Create a server
