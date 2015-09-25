@@ -27,7 +27,7 @@ def connectToServer(server, port, message):
             break
         receivedMessage += data.decode("ascii")
 
-    print ("Received reply: "+ receivedMessage.decode("ascii"))
+    #print ("Received reply: "+ receivedMessage)
 
     #serverSock.close() #do with server
 
@@ -43,7 +43,7 @@ def parseLinks(linksFile):
 
 # displays the dictionary of links and distinguishes directories and files
 def display(links):
-    print(links)
+    #print(links)
     for entry in links:
         if entry == "":
             # may not want this forever
@@ -52,8 +52,10 @@ def display(links):
         elif entry[0] == "0":
             print(entry[1:])
         # print file
-        else:
+        elif entry[0] == "1":
             print(entry[1:]+"...")
+        else:
+            pass
 
 # construct the user-defined requests
 def nextRequest(links):
@@ -92,7 +94,7 @@ def main():
             links = parseLinks(response)
             
         else:
-            print("printing response: " + response)
+            #print("printing response: " + response)
             input("Press any key to continue...")
 
         display(links)
