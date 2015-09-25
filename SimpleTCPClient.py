@@ -20,12 +20,18 @@ def connectToServer(server, port, message):
     serverSock.send(message.encode("ascii"))
     print ("Sent message; waiting for reply")
 
-    returned = serverSock.recv(1024)
-    print ("Received reply: "+ returned.decode("ascii"))
+    receivedMessage = ""
+    while True:
+        data = serverSock.recv(1024)
+        if not len(data):
+            break
+        receivedMessage += data.decode("ascii")
+
+    print ("Received reply: "+ receivedMessage.decode("ascii"))
 
     #serverSock.close() #do with server
 
-    return returned.decode("ascii")
+    return receivedMessage
 
 def parseLinks(linksFile):
     # creates dictionary with a key of display string and value everything else
@@ -59,11 +65,9 @@ def main():
             links = parseLinks(response)
             
         else:
-            print(response)
+            print("printing response: " + response)
             input("Press any key to continue...")
-            print()
-            print()
-            print()
+
         print(links)
         for entry in links:
             if entry == "":
