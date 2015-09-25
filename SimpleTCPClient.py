@@ -33,13 +33,40 @@ def connectToServer(server, port, message):
 
     return receivedMessage
 
+# creates dictionary with a key of display string and value everything else
 def parseLinks(linksFile):
-    # creates dictionary with a key of display string and value everything else
     d = {}
     for line in linksFile.split("\n"):
         words = line.split("\t")
         d[words[0]] = words[1:]
     return d
+
+# displays the dictionary of links and distinguishes directories and files
+def display(links):
+    print(links)
+    for entry in links:
+        if entry == "":
+            # may not want this forever
+            pass
+        # print directory
+        elif entry[0] == "0":
+            print(entry[1:])
+        # print file
+        else:
+            print(entry[1:]+"...")
+
+# construct the user-defined requests
+def nextRequest(links):
+    request = input("Select an option from the list above -> ")
+    for key in links:
+        if request in key:
+            server = links[key][1]
+            port = links[key][2]
+            message = links[key][0]
+            if key[0] == "0":
+                messageType = "file"
+            else:
+                messageType = "links"
 
 def main():
     # Process command line args (server, port)
@@ -68,28 +95,10 @@ def main():
             print("printing response: " + response)
             input("Press any key to continue...")
 
-        print(links)
-        for entry in links:
-            if entry == "":
-                # may not want this forever
-                pass
-            elif entry[0] == "0":
-                print(entry[1:])
-            else:
-                print(entry[1:]+"...")
-                
-        nextRequest = input("Select an option from the list above -> ")
-        for key in links:
-            if nextRequest in key:
-                server = links[key][1]
-                port = links[key][2]
-                message = links[key][0]
-                if key[0] == "0":
-                    messageType = "file"
-                else:
-                    messageType = "links"
+        display(links)
+        nextRequest(links)
+        
+        #python SimpleTCPClient.py 66.166.122.165 70
                     
-    
-
 
 main()
