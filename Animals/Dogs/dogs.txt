@@ -1,0 +1,3 @@
+Dog: any carnivore of the dogfamily Canidae, having prominent canine teeth and, in the wild state, a long and slender muzzle, a deep-chested muscular body, a bushy tail, and large, erect ears. 
+Noise: Woof!
+Food: Dog food, but they would eat basically anything
