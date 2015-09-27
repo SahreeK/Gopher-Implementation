@@ -1,9 +1,10 @@
 '''
-A simple TCP "echo" server written in Python.
+Gopher server
 
-author:  Amy Csizmar Dalal and [YOUR NAMES HERE]
+Started with code written by Amy Csizmar Dalal.
+authors:  Cody Bohlman, Joe Burson, Sahree Kasper
 CS 331, Fall 2015
-date:  21 September 2015
+date:  28 September 2015
 '''
 import sys, socket
 
@@ -26,58 +27,46 @@ class TCPServer:
             # accepts connection, should not say anything
             print ("Connection received from ",  clientSock.getpeername())
             # Get the message and echo it back
-            message = ""
             while True:
                 data = clientSock.recv(1024)
                 if not len(data):
                     break
-                print ("Received message:  " + data.decode("ascii"))
-                clientMessage = data.decode("ascii")
-                if clientMessage == "\r\n":
-                    print("cats")
-                    linksFile = open(".links")
-                    message = self.parseFile(linksFile)
-                    linksFile.close()
-                elif clientMessage.strip()[-1] == "/":
-                    print("cats1")
-                    try:
-                        print("trying to open: " + clientMessage +".links")
-                        linksFile = open(clientMessage.strip() +".links")
-                        message = self.parseFile(linksFile)
-                        linksFile.close()
-                    except:
-                        message = "i    This resource cannot be located error.host  1 \r\n."
-                    
-                else:
-                    print("cats2")
-                    try:
-                        print("trying to open: " + clientMessage)
-                        linksFile = open(clientMessage.strip())
-                        message = self.parseFile(linksFile)
-                        linksFile.close()
-                    except:
-                        message = "i    This resource cannot be located error.host  1 \r\n."
-                # message to be sent out\
-                print(message)
-                if message == "":
-                    message = "\r\n."
+                message = self.parseMessage(data.decode("ascii"))
+                # message to be sent out
                 data = message.encode("ascii")
                 clientSock.sendall(data)
                 clientSock.shutdown(socket.SHUT_RDWR)
             
-    def parseLinks(self, linksFile):
-        pass
+    # parses the message from the client
+    def parseMessage(self, clientMessage):
+        message = ""
+        item = clientMessage.strip()
+        if clientMessage == "\r\n":
+            message = self.openResource(".links")
+        elif clientMessage.strip()[-1] == "/":
+            message = self.openResource(item + ".links")
+        else:
+            message = self.openResource(item)
+                
+        message += "\r\n."
+        return message
+
+    # opens and closes a give file
+    def openResource(self, location):
+        try:
+            resource = open(location)
+            content = self.parseFile(resource)
+            resource.close()
+            return content
+        except:
+            return "i    This resource cannot be located error.host  1 \r\n."
     
     # open the file and print the contents as a string
     def parseFile(self, f):
         outputString = ""
         for line in f:
             outputString += line
-        outputString += "\r\n."
         return outputString
-    
-    def findFile(self, selectorString):
-        pass
     
 
 def main():

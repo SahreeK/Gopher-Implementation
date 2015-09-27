@@ -1,9 +1,10 @@
 '''
-A simple "echo" client written in Python.
+Gopher client
 
-author:  Amy Csizmar Dalal and [YOUR NAMES HERE]
+Started with code written by Amy Csizmar Dalal.
+authors:  Cody Bohlman, Joe Burson, Sahree Kasper
 CS 331, Fall 2015
-date:  21 September 2015
+date:  28 September 2015
 '''
 import re, sys, socket
 
@@ -104,7 +105,5 @@ def main():
         port = int(port)
         message += "\r\n"
         
-        #python SimpleTCPClient.py 66.166.122.165 70
-                    
 
 main()
