@@ -1,5 +1,4 @@
-0Aboutthissite	README	localhost	50000
+0Aboutthissite	README.txt	localhost	50000
 0Contactinfo	contacts.txt	localhost	50000
-1Haikupoems	Haikus/	localhost	50000
-1Limerickpoems	Limericks/	localhost	50000
-1Shakespeareansonnets	Sonnets/	localhost	50000
+1Bad Jokes	Bad_Jokes/	localhost	50000
+1Animals	Animals/	localhost	50000
