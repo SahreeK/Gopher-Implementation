@@ -14,12 +14,14 @@ def usage():
     print ("Usage:  python SimpleTCPClient <server IP> <port number>")
 
 def connectToServer(server, port, message):
-    serverSock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    serverSock.connect((server, port))
-    print ("Connected to server; sending message")
-
-    serverSock.send(message.encode("ascii"))
-    print ("Sent message; waiting for reply")
+    try:
+        serverSock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        serverSock.connect((server, port))
+        serverSock.send(message.encode("ascii"))
+    
+    except:
+        print("Connection to server closed.")
+        sys.exit(0)
 
     receivedMessage = ""
     while True:
@@ -55,28 +57,41 @@ def display(links):
             pass
 
 # construct the user-defined requests
-def nextRequest(links):
-    request = input("Select an option from the list above -> ")
-    for key in links:
-        if request in key:
-            server = links[key][1]
-            port = links[key][2]
-            message = links[key][0]
-            if key[0] == "0":
-                messageType = "file"
-            else:
-                messageType = "links"
-            return message, messageType, server, port
+def nextRequest(links, currentLinks, server="localhost", port="50000"):
+    request = input("\nSelect an option from the list above -> ")
+    print()
+    # nothing
+    if request == "": 
+        return "not valid", "none", server, port
+    try:
+        for key in links:
+            if request in key:
+                server = links[key][1]
+                port = links[key][2]
+                message = links[key][0]
+                if key[0] == "0":
+                    messageType = "file"
+                elif key[0] == "1":
+                    messageType = "links"
+                else:
+                    messageType = "not valid"
+                return message, messageType, server, port
+    except TypeError:
+        print("There was an error in your input.")
+        
+    return "", "links", server, port 
 
 def main():
     # Process command line args (server, port)
-    if len(sys.argv) == 3:
+    if len(sys.argv) >= 3:
         try:
             server = sys.argv[1]
             port = int(sys.argv[2])
             message = "\r\n"
             messageType = "links"
             links = {}
+#            if len(sys.argv) == 4:
+#                message = sys.argv[3]
 
         except ValueError:
             usage()
@@ -91,12 +106,22 @@ def main():
             # response will be a string
             links = parseLinks(response)
             
-        else:
+        elif messageType == "file":
             print(response)
             input("Press enter to continue...")
+            print()
+            message = ""
+        else:
+            pass
 
+        #print(links)
         display(links)
-        message, messageType, server, port = nextRequest(links)
+        
+        currentLinks = links
+        
+        message, messageType, server, port = nextRequest(links, currentLinks)
+#        if messageType == "none":
+#            display(links)
         port = int(port)
         message += "\r\n"
         

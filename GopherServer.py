@@ -25,7 +25,6 @@ class TCPServer:
         while True:
             clientSock, clientAddr = self.sock.accept()
             # accepts connection, should not say anything
-            print ("Connection received from ",  clientSock.getpeername())
             # Get the message and echo it back
             while True:
                 data = clientSock.recv(1024)
@@ -41,7 +40,9 @@ class TCPServer:
     def parseMessage(self, clientMessage):
         message = ""
         item = clientMessage.strip()
-        if clientMessage == "\r\n":
+        if clientMessage.strip() == "not valid":
+            pass
+        elif clientMessage == "\r\n":
             message = self.openResource(".links")
         elif clientMessage.strip()[-1] == "/":
             message = self.openResource(item + ".links")
@@ -68,6 +69,23 @@ class TCPServer:
             outputString += line
         return outputString
     
+    # creates dictionary with a key of display string and value everything else
+    def parseLinks(linksFile):
+        d = {}
+        for line in linksFile.split("\n"):
+            words = line.split("\t")
+            key = self.lengthLimiter(words[0], 70)
+            value = words[1:]
+            value[0] = self.lengthLimiter(value[0], 255)
+            d[key] = value
+            
+        print(d)
+        return d
+    
+    def lengthLimiter(self, s, limit):
+        if len(s) > limit:
+            return s[:limit-1]
+        return s
 
 def main():
     # Create a server
@@ -81,7 +99,7 @@ def main():
         server = TCPServer()
 
     # Listen forever
-    print ("Listening on port " + str(server.port))
+    #print ("Listening on port " + str(server.port))
     server.listen()
 
 main()
