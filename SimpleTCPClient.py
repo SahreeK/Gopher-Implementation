@@ -27,7 +27,7 @@ def connectToServer(server, port, message):
             break
         receivedMessage += data.decode("ascii")
 
-    #print ("Received reply: "+ receivedMessage)
+    print ("Received reply: "+ receivedMessage)
 
     #serverSock.close() #do with server
 
@@ -69,6 +69,7 @@ def nextRequest(links):
                 messageType = "file"
             else:
                 messageType = "links"
+            return message, messageType, server, port
 
 def main():
     # Process command line args (server, port)
@@ -88,17 +89,20 @@ def main():
         
     while True:
         response = connectToServer(server, port, message)
+        print("This was the response:", response)
         if messageType == "links":
             #print(response)
             # response will be a string
             links = parseLinks(response)
             
         else:
-            #print("printing response: " + response)
-            input("Press any key to continue...")
+            print("Printing file: " + response)
+            input("Press enter to continue...")
 
         display(links)
-        nextRequest(links)
+        message, messageType, server, port = nextRequest(links)
+        port = int(port)
+        message += "\r\n"
         
         #python SimpleTCPClient.py 66.166.122.165 70
                     

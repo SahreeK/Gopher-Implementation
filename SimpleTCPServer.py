@@ -11,10 +11,12 @@ class TCPServer:
     def __init__(self, port=50000):
         self.port = port
         self.host = ""
+        self.startServer()
+
+    def startServer(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) #In case server crashes
-        self.sock.bind((self.host, self.port))
-
+        self.sock.bind((self.host, self.port))        
 
     def listen(self):
         self.sock.listen(5)
@@ -31,16 +33,48 @@ class TCPServer:
                     break
                 print ("Received message:  " + data.decode("ascii"))
                 clientMessage = data.decode("ascii")
-                # message to be sent out
+                if clientMessage == "\r\n":
+                    print("cats")
+                    linksFile = open(".links")
+                    message = self.parseFile(linksFile)
+                    linksFile.close()
+                elif clientMessage.strip()[-1] == "/":
+                    print("cats1")
+                    try:
+                        print("trying to open: " + clientMessage +".links")
+                        linksFile = open(clientMessage.strip() +".links")
+                        message = self.parseFile(linksFile)
+                        linksFile.close()
+                    except:
+                        message = "i    This resource cannot be located error.host  1 \r\n."
+                    
+                else:
+                    print("cats2")
+                    try:
+                        print("trying to open: " + clientMessage)
+                        linksFile = open(clientMessage.strip())
+                        message = self.parseFile(linksFile)
+                        linksFile.close()
+                    except:
+                        message = "i    This resource cannot be located error.host  1 \r\n."
+                # message to be sent out\
+                print(message)
+                if message == "":
+                    message = "\r\n."
                 data = message.encode("ascii")
                 clientSock.sendall(data)
-            clientSock.close()
+                clientSock.shutdown(socket.SHUT_RDWR)
             
     def parseLinks(self, linksFile):
         pass
     
-    def parseFile(self, textFile):
-        pass
+    # open the file and print the contents as a string
+    def parseFile(self, f):
+        outputString = ""
+        for line in f:
+            outputString += line
+        outputString += "\r\n."
+        return outputString
     
     def findFile(self, selectorString):
         pass
