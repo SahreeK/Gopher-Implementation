@@ -2,6 +2,13 @@
 Gopher server
 
 Started with code written by Amy Csizmar Dalal.
+
+This program implements the server side of the Gopher Protocol (RFC 1436). 
+If the server receives an ill-formatted or incorrect selector string, it will return the top level links file to the client.
+If white space is entered, the current links file will be displayed.
+The server runs on port 50000. 
+Using the socket library, we use socket.shutdown() to close the connection, but allow new connections with the same settings. 
+
 authors:  Cody Bohlman, Joe Burson, Sahree Kasper
 CS 331, Fall 2015
 date:  28 September 2015
@@ -17,7 +24,7 @@ class TCPServer:
     def startServer(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) #In case server crashes
-        self.sock.bind((self.host, self.port))        
+        self.sock.bind((self.host, self.port))
 
     def listen(self):
         self.sock.listen(5)
@@ -35,6 +42,8 @@ class TCPServer:
                 data = message.encode("ascii")
                 clientSock.sendall(data)
                 clientSock.shutdown(socket.SHUT_RDWR)
+                
+        clientSock.close()
             
     # parses the message from the client
     def parseMessage(self, clientMessage):
@@ -43,9 +52,9 @@ class TCPServer:
         if clientMessage.strip() == "not valid":
             pass
         elif clientMessage == "\r\n":
-            message = self.openResource(".links")
+            message = self.parseLinks(self.openResource(".links"))
         elif clientMessage.strip()[-1] == "/":
-            message = self.openResource(item + ".links")
+            message = self.parseLinks(self.openResource(item + ".links"))
         else:
             message = self.openResource(item)
                 
@@ -70,17 +79,27 @@ class TCPServer:
         return outputString
     
     # creates dictionary with a key of display string and value everything else
-    def parseLinks(linksFile):
+    def parseLinks(self, linksFile):
         d = {}
         for line in linksFile.split("\n"):
             words = line.split("\t")
+            
+            # This represents the display string to less than 70 characters
             key = self.lengthLimiter(words[0], 70)
             value = words[1:]
+            
+            # This represents the selector string, limited to less than 255 characters
             value[0] = self.lengthLimiter(value[0], 255)
             d[key] = value
-            
-        print(d)
-        return d
+        
+        s = ""
+        for key in d:
+            s += key + "\t"
+            for item in d[key]:
+                s += item + "\t"
+            s += "\n"
+
+        return s
     
     def lengthLimiter(self, s, limit):
         if len(s) > limit:
@@ -99,7 +118,7 @@ def main():
         server = TCPServer()
 
     # Listen forever
-    #print ("Listening on port " + str(server.port))
+
     server.listen()
 
 main()

@@ -2,6 +2,12 @@
 Gopher client
 
 Started with code written by Amy Csizmar Dalal.
+
+Implements the client side of the Gopher Protocol (RFC 1436).
+Directories are indicated with a trailing ellipses. Files are indicated as their display string. This adheres to the RFC guidelines.
+
+
+
 authors:  Cody Bohlman, Joe Burson, Sahree Kasper
 CS 331, Fall 2015
 date:  28 September 2015
@@ -11,7 +17,8 @@ import re, sys, socket
 HOSTNAME = socket.gethostname()
 
 def usage():
-    print ("Usage:  python SimpleTCPClient <server IP> <port number>")
+    print ("Usage:  python3 GopherClient.py <server IP> <port number>")
+    sys.exit(0)
 
 def connectToServer(server, port, message):
     try:
@@ -20,7 +27,7 @@ def connectToServer(server, port, message):
         serverSock.send(message.encode("ascii"))
     
     except:
-        print("Connection to server closed.")
+        print("No connection to server available.")
         sys.exit(0)
 
     receivedMessage = ""
@@ -90,8 +97,6 @@ def main():
             message = "\r\n"
             messageType = "links"
             links = {}
-#            if len(sys.argv) == 4:
-#                message = sys.argv[3]
 
         except ValueError:
             usage()
@@ -102,7 +107,7 @@ def main():
     while True:
         response = connectToServer(server, port, message)
         if messageType == "links":
-            #print(response)
+
             # response will be a string
             links = parseLinks(response)
             
@@ -114,14 +119,10 @@ def main():
         else:
             pass
 
-        #print(links)
         display(links)
-        
         currentLinks = links
         
         message, messageType, server, port = nextRequest(links, currentLinks)
-#        if messageType == "none":
-#            display(links)
         port = int(port)
         message += "\r\n"
         
