@@ -1,4 +1,4 @@
-0About Dogs	Animals/Dogs/dogs.txt	137.22.4.34	50000
-1Chihuahua	Animals/Dogs/Chihuahua/	137.22.4.34	50000
-1Labrador Retriever	Animals/Dogs/Labrador Retriever/	137.22.4.34	50000
-1Poodle	Animals/Dogs/Poodle/	137.22.4.34	50000
+0About Dogs	Animals/Dogs/dogs.txt	localhost	50000
+1Chihuahua	Animals/Dogs/Chihuahua/	localhost	50000
+1Labrador Retriever	Animals/Dogs/Labrador Retriever/	localhost	50000
+1Poodle	Animals/Dogs/Poodle/	localhost	50000
