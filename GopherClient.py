@@ -22,6 +22,7 @@ def usage():
 
 def connectToServer(server, port, message):
     try:
+        #print(message, server, port)
         serverSock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         serverSock.connect((server, port))
         serverSock.send(message.encode("ascii"))
@@ -64,14 +65,16 @@ def display(links):
             pass
 
 # construct the user-defined requests
-def nextRequest(links, currentLinks, server="localhost", port="50000"):
+def nextRequest(links, currentLinks, server, port):
     request = input("\nSelect an option from the list above -> ")
     print()
+    badLine = ""
     # nothing
     if request == "": 
         return "not valid", "none", server, port
     try:
         for key in links:
+            badLine = links[key]
             if request in key:
                 server = links[key][1]
                 port = links[key][2]
@@ -86,6 +89,8 @@ def nextRequest(links, currentLinks, server="localhost", port="50000"):
     except TypeError:
         print("There was an error in your input.")
         
+    except IndexError:
+        print("Invalid .links file from server. Line is:",badLine)
     return "", "links", server, port 
 
 def main():
@@ -122,7 +127,7 @@ def main():
         display(links)
         currentLinks = links
         
-        message, messageType, server, port = nextRequest(links, currentLinks)
+        message, messageType, server, port = nextRequest(links, currentLinks, server, port)
         port = int(port)
         message += "\r\n"
         

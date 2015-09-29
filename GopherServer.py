@@ -31,6 +31,7 @@ class TCPServer:
 
         while True:
             clientSock, clientAddr = self.sock.accept()
+            print("Message received from ",clientAddr)
             # accepts connection, should not say anything
             # Get the message and echo it back
             while True:
@@ -58,7 +59,7 @@ class TCPServer:
         else:
             message = self.openResource(item)
                 
-        message += "\r\n."
+        message += "."
         return message
 
     # opens and closes a give file
@@ -97,7 +98,7 @@ class TCPServer:
             s += key + "\t"
             for item in d[key]:
                 s += item + "\t"
-            s += "\n"
+            s += "\r\n"
 
         return s
     
