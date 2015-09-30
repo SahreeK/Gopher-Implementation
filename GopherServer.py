@@ -1,5 +1,5 @@
 '''
-Gopher server
+Gopher server revision
 
 Started with code written by Amy Csizmar Dalal.
 
@@ -11,7 +11,7 @@ Using the socket library, we use socket.shutdown() to close the connection, but 
 
 authors:  Cody Bohlman, Joe Burson, Sahree Kasper
 CS 331, Fall 2015
-date:  28 September 2015
+date:  2 October 2015
 '''
 import sys, socket
 
@@ -59,7 +59,7 @@ class TCPServer:
         else:
             message = self.openResource(item)
                 
-        message += "."
+        message += ".\r\n"
         return message
 
     # opens and closes a give file

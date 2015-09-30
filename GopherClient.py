@@ -1,5 +1,5 @@
 '''
-Gopher client
+Gopher client revision
 
 Started with code written by Amy Csizmar Dalal.
 
@@ -10,7 +10,7 @@ Directories are indicated with a trailing ellipses. Files are indicated as their
 
 authors:  Cody Bohlman, Joe Burson, Sahree Kasper
 CS 331, Fall 2015
-date:  28 September 2015
+date:  2 October 2015
 '''
 import re, sys, socket
 
