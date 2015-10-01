@@ -65,7 +65,7 @@ def display(links):
             pass
 
 # construct the user-defined requests
-def nextRequest(links, currentLinks, server, port):
+def nextRequest(links, server, port):
     request = input("\nSelect an option from the list above -> ")
     print()
     badLine = ""
@@ -130,9 +130,8 @@ def main():
             pass
 
         display(links)
-        currentLinks = links
         
-        message, messageType, server, port = nextRequest(links, currentLinks, server, port)
+        message, messageType, server, port = nextRequest(links, server, port)
         port = int(port)
         message += "\r\n"
         
