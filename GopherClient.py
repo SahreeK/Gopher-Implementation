@@ -75,7 +75,7 @@ def nextRequest(links, currentLinks, server, port):
     try:
         for key in links:
             badLine = links[key]
-            if request in key:
+            if request.lower() in key.lower():
                 server = links[key][1]
                 port = links[key][2]
                 message = links[key][0]
@@ -93,6 +93,10 @@ def nextRequest(links, currentLinks, server, port):
         print("Invalid .links file from server. Line is:",badLine)
     return "", "links", server, port 
 
+def showUsability():
+    print("Welcome to our Gopher Client!\n\nBelow you will see the contents of the root level directory.\nFolder names are followed by"\
+          +" an ellipsis (...), and files have no special marking. This adheres to the guidelines in RFC 1436.\n\nWhen selecting a file or directory, you may type either part of or the entire display string. Use the entire display string if two files/directories have similar names.\n")
+
 def main():
     # Process command line args (server, port)
     if len(sys.argv) >= 3:
@@ -109,6 +113,7 @@ def main():
     else:
         usage()
         
+    showUsability()
     while True:
         response = connectToServer(server, port, message)
         if messageType == "links":
